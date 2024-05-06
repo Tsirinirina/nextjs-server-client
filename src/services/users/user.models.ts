@@ -1,11 +1,17 @@
 export interface User {
-  id?: string;
-  name: string;
-  age: number;
+  id: 1;
+  firstname: string;
+  lastname: string;
+  email: string;
   gender: GENDER;
+  phone: string;
+  birthDate: string;
+  birthPlace: string;
+  isDisable: boolean;
+  avatar: string;
 }
 
 enum GENDER {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
+  MALE = "Male",
+  FEMALE = "Female",
 }

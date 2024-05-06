@@ -5,6 +5,10 @@ export const GetAllUser = async () => {
 };
 
 export const GetPaginatedUser = async (criteria: Criteria) => {
-  const res = await fetch(`${api.user.index}`, { cache: "no-store" });
+  console.log("criteria=", criteria);
+
+  const res = await fetch(`${api.user.index}`, {
+    cache: "no-store",
+  });
   return res.json();
 };
