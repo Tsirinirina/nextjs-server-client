@@ -36,8 +36,6 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
       searchUrl != "/" ? searchUrl : ""
     }?page=${currentPage}&pageSize=${perPage}`;
 
-    console.log("CRITERIA=>", criteria);
-
     router.push(criteria);
   }, [currentPage, totalRows, perPage, router]);
 
