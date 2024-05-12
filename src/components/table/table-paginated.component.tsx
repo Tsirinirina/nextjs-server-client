@@ -5,23 +5,27 @@ import DataTable from "react-data-table-component";
 import { useEffect, useState } from "react";
 import PaginationComponent from "../pagination/pagination.component";
 import { useRouter } from "next/navigation";
+import TableLoader from "../loader/table.loader.component";
 
 interface TablePaginatedComponentProps {
   columns: any[];
   data: User[];
+  totalPages: number;
+  totalRows: number;
   searchUrl: string;
 }
 
 const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
   columns,
   data,
+  totalPages,
+  totalRows,
   searchUrl,
 }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(20);
-  const [totalPage, setTotalPage] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handlePerRowsChange = (currentRowsPerPage: number): void => {
     setPerPage(currentRowsPerPage);
@@ -31,24 +35,39 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
     setCurrentPage(page);
   };
 
-  useEffect(() => {
+  const fetchData = async () => {
+    setIsLoading(true); // Démarre le chargement
+
     const criteria = `${
-      searchUrl != "/" ? searchUrl : ""
+      searchUrl !== "/" ? searchUrl : ""
     }?page=${currentPage}&pageSize=${perPage}`;
 
+    setIsLoading(false); // Termine le chargement
+
     router.push(criteria);
-  }, [currentPage, totalRows, perPage, router]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, totalRows, perPage, router, searchUrl]);
 
   return (
-    <div className="bg">
+    <div className="table-paginated-container">
       <div>DataList Component</div>
       <div>
-        <DataTable data={data} columns={columns} />
+        <DataTable
+          data={data}
+          columns={columns}
+          fixedHeader
+          fixedHeaderScrollHeight="70vh"
+          progressPending={isLoading}
+          progressComponent={<TableLoader />}
+        />
         <PaginationComponent
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handlePerRowsChange}
-          totalPages={totalPage}
+          totalPages={totalPages}
           totalRowPerPage={perPage}
           totalRows={totalRows}
         />

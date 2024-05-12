@@ -13,5 +13,6 @@ export const GetPaginatedUser = async (searchParams: SearchParams) => {
   const res = await fetch(`${api.user.index}/${criteria}`, {
     cache: "no-store",
   });
+  await new Promise((resolve) => setTimeout(resolve, 100));
   return res.json();
 };
