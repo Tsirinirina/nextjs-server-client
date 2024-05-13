@@ -25,34 +25,41 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       onPageChange(1);
     }
   };
+  console.log("currentPage", currentPage, "===totalPages", totalPages);
+
   return (
     <div className="pagination-container">
-      <div className={"paginationNumber"}>
+      <div className={"pagination-number"}>
         <span>Page:</span>
         <span className={"active"}>{currentPage}</span>sur{" "}
         <span className={"all"}>{totalPages}</span>
       </div>
       <div className={"paginationButton"}>
-        <button onClick={() => onPageChange(1)} disabled={currentPage === 1}>
+        <button
+          onClick={() => onPageChange(1)}
+          disabled={currentPage === 1}
+          className={"left"}
+        >
           <IconFirstPage />
         </button>
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={"paginationButtonCenter"}
+          className={"center"}
         >
           <IconPrev />
         </button>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={"paginationButtonCenter"}
+          className={"center"}
         >
           <IconNext />
         </button>
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
+          className={"rigth"}
         >
           <IconLastPage />
         </button>

@@ -2,12 +2,16 @@
 import { User } from "@/services/users/user.models";
 import "./table-paginated.style.css";
 import DataTable from "react-data-table-component";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PaginationComponent from "../pagination/pagination.component";
 import { useRouter } from "next/navigation";
 import TableLoader from "../loader/table.loader.component";
+import IconArrowLeft from "../icons/iconArrowLeft";
+import IconSearch from "../icons/iconSearch";
+import IconClose from "../icons/iconClose";
 
 interface TablePaginatedComponentProps {
+  title?: string;
   columns: any[];
   data: User[];
   totalPages: number;
@@ -16,6 +20,7 @@ interface TablePaginatedComponentProps {
 }
 
 const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
+  title,
   columns,
   data,
   totalPages,
@@ -26,6 +31,7 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [perPage, setPerPage] = useState(20);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchKeywords, setSearchKeywords] = useState<string>("");
 
   const handlePerRowsChange = (currentRowsPerPage: number): void => {
     setPerPage(currentRowsPerPage);
@@ -36,25 +42,56 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
   };
 
   const fetchData = async () => {
-    setIsLoading(true); // Démarre le chargement
-
+    setIsLoading(true);
     const criteria = `${
       searchUrl !== "/" ? searchUrl : ""
-    }?page=${currentPage}&pageSize=${perPage}`;
-
-    setIsLoading(false); // Termine le chargement
-
+    }?page=${currentPage}&pageSize=${perPage}&search=${searchKeywords}`;
+    setIsLoading(false);
     router.push(criteria);
+  };
+
+  const handleBack = () => {};
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setSearchKeywords(event.target.value);
+  };
+
+  const handleSubmitSearch = () => {};
+  const handleClear = () => {
+    setSearchKeywords("");
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, totalRows, perPage, router, searchUrl]);
+  }, [currentPage, totalRows, perPage, router, searchUrl, searchKeywords]);
 
   return (
-    <div className="table-paginated-container">
-      <div>DataList Component</div>
-      <div>
+    <div className="table-paginated container">
+      <div className="header">
+        <div className="start">
+          <button className="btn back" onClick={handleBack}>
+            <IconArrowLeft />
+          </button>
+          <div className="title">{title ? title : "Liste "}</div>
+        </div>
+        <div className="end">
+          <div className="form-field ">
+            <input
+              type="search"
+              placeholder="Rechercher..."
+              onChange={handleSearch}
+              value={searchKeywords}
+            />
+            <button
+              onClick={searchKeywords.length ? handleClear : handleSubmitSearch}
+            >
+              {searchKeywords.length != 0 ? <IconClose /> : <IconSearch />}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="body ">
         <DataTable
           data={data}
           columns={columns}
