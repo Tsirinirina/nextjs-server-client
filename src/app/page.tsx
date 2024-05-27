@@ -7,6 +7,8 @@ import ServerRes from "@/core/constant/server.response";
 
 export default async function Home({ searchParams }: any) {
   const response: ServerRes = await GetPaginatedUser(searchParams);
+  console.log("SEARCH PARAMS==", searchParams);
+
   const users: User[] = response.data;
   const totalPages: number = response.totalPages;
   const totalRows: number = response.totalRows;

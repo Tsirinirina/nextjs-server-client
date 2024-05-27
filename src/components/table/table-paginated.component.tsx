@@ -9,6 +9,7 @@ import TableLoader from "../loader/table.loader.component";
 import IconArrowLeft from "../icons/iconArrowLeft";
 import IconSearch from "../icons/iconSearch";
 import IconClose from "../icons/iconClose";
+import { queryBegin } from "@/core/constant/request.searchParams.constant";
 
 interface TablePaginatedComponentProps {
   title?: string;
@@ -43,9 +44,9 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
 
   const fetchData = async () => {
     setIsLoading(true);
-    const criteria = `${
-      searchUrl !== "/" ? searchUrl : ""
-    }?page=${currentPage}&pageSize=${perPage}&search=${searchKeywords}`;
+    const criteria = `${queryBegin(
+      searchUrl
+    )}?page=${currentPage}&pageSize=${perPage}`;
     setIsLoading(false);
     router.push(criteria);
   };
@@ -53,18 +54,31 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
   const handleBack = () => {};
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     setSearchKeywords(event.target.value);
   };
 
-  const handleSubmitSearch = () => {};
+  const handleSubmitSearch = () => {
+    setIsLoading(true);
+    const criteria = `${queryBegin(
+      searchUrl
+    )}?page=${currentPage}&pageSize=${perPage}&search=${searchKeywords}`;
+    setIsLoading(false);
+    router.push(criteria);
+  };
   const handleClear = () => {
     setSearchKeywords("");
+    setIsLoading(true);
+    const criteria = `${queryBegin(
+      searchUrl
+    )}?page=${currentPage}&pageSize=${perPage}`;
+    setIsLoading(false);
+    router.push(criteria);
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, totalRows, perPage, router, searchUrl, searchKeywords]);
+  }, [currentPage, totalRows, perPage, router, searchUrl]);
 
   return (
     <div className="table-paginated container">
@@ -84,9 +98,11 @@ const TablePaginatedComponent: React.FC<TablePaginatedComponentProps> = ({
               value={searchKeywords}
             />
             <button
-              onClick={searchKeywords.length ? handleClear : handleSubmitSearch}
+              // onClick={searchKeywords.length ? handleClear : handleSubmitSearch}
+              onClick={handleSubmitSearch}
             >
-              {searchKeywords.length != 0 ? <IconClose /> : <IconSearch />}
+              {/* {searchKeywords.length != 0 ? <IconClose /> : <IconSearch />} */}
+              <IconSearch />
             </button>
           </div>
         </div>

@@ -10,9 +10,10 @@ export const GetAllUser = async () => {
 
 export const GetPaginatedUser = async (searchParams: SearchParams) => {
   const criteria = extractCriteriaFromSearchParams(searchParams);
+  // console.log("CRITERIA=====", criteria);
+
   const res = await fetch(`${api.user.index}/${criteria}`, {
     cache: "no-store",
   });
-  await new Promise((resolve) => setTimeout(resolve, 100));
   return res.json();
 };

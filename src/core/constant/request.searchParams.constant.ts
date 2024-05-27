@@ -7,9 +7,14 @@ export interface SearchParams {
 export const extractCriteriaFromSearchParams = (
   searchParams: SearchParams
 ): string => {
-  const page = searchParams.page;
-  const pageSize = searchParams.pageSize;
-  const search = searchParams.search;
+  const page = searchParams.page && `page=${searchParams.page}`;
+  const pageSize =
+    searchParams.pageSize && `&pageSize=${searchParams.pageSize}`;
+  const search = searchParams.search && `&search=${searchParams.search}`;
 
-  return `?page=${page}&pageSize=${pageSize}`;
+  return `?${page}${pageSize}${search}`;
+};
+
+export const queryBegin = (searchUrl: string) => {
+  return searchUrl !== "/" ? searchUrl : "";
 };
